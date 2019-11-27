@@ -11,6 +11,12 @@
 
     <groupId>me.akoala</groupId>
     <artifactId>scac-eureka-test</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>scac-eureka-test-provider</module>
+        <module>scac-eureka-test-consumer</module>
+    </modules>
+
 
 
 </project>

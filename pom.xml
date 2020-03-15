@@ -12,6 +12,8 @@
         <module>scac-eureka</module>
         <module>scac-eureka-peer</module>
         <module>scac-eureka-test</module>
+        <module>scac-config-eureka-peer</module>
+        <module>scac-config-server</module>
     </modules>
 
     <dependencyManagement>

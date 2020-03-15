@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: config-eureka-peer  # 应用名称
+  cloud:
+    config:
+      uri: http://single.config.scac:1121
+      label: master
+
+---
+spring:
+  profiles: peer1
+  cloud:
+    config:
+      profile: peer1
+---
+spring:
+  profiles: peer2
+  cloud:
+    config:
+      profile: peer2
+---
+spring:
+  profiles: peer3
+  cloud:
+    config:
+      profile: peer3

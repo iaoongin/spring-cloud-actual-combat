@@ -1,4 +1,4 @@
-package me.akoala.scac.eureka.peer;
+package me.akoala.scac.config.eureka.peer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,10 +15,10 @@ import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
  */
 @EnableEurekaServer
 @SpringBootApplication
-public class EurekaPeerApplication {
+public class ConfigEurekaPeerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EurekaPeerApplication.class, args);
+        SpringApplication.run(ConfigEurekaPeerApplication.class, args);
     }
 
 }

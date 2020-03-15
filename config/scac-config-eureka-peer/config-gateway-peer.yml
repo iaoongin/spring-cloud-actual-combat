@@ -1,0 +1,41 @@
+
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: true #由于该应用为注册中心，所以设置为false, 代表不向注册中心注册自己。
+    fetch-registry: true #由于注册中心的职责就是维护服务实例，它并不需要去检索服务， 所以也设置为false。
+    service-url:
+      defaultZone: http://peer1.eureka.scac:1111/eureka/,http://peer2.eureka.scac:1112/eureka/,http://peer3.eureka.scac:1113/eureka/
+spring:
+  application:
+    name: gateway
+
+---
+spring:
+  profiles: peer1
+server:
+  port: 1131
+eureka:
+  instance:
+    hostname: peer1.gateway.scac
+
+
+---
+spring:
+  profiles: peer2
+server:
+  port: 1132
+eureka:
+  instance:
+    hostname: peer2.gateway.scac
+
+---
+spring:
+  profiles: peer3
+server:
+  port: 1133
+eureka:
+  instance:
+    hostname: peer3.gateway.scac

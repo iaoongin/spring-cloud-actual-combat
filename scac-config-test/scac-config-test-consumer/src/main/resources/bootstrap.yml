@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: config-test-consumer  # 应用名称
+  cloud:
+    config:
+      uri: http://single.config.scac:1121
+      label: master

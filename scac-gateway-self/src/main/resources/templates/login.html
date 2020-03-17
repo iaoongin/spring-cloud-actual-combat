@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+    </script>
+</head>
+<body>
+
+<form onsubmit="return false" action="##">
+    <input name="username" id="username" value="123">
+    <input name="password" id="password" value="123">
+    <button onclick="login()">登录</button>
+</form>
+<script type="application/javascript">
+    (function ($) {
+        $.getUrlParam = function (name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+
+
+    })(jQuery);
+
+    function login() {
+        var formData = $('form').serialize();
+
+        $.post("/auth/login", formData, resp => {
+            console.log(resp)
+            console.log($.getUrlParam('redirectUrl'))
+            if (resp.code == '200') {
+                window.location.href = $.getUrlParam('redirectUrl') + "?token=" + resp.data.token;
+            } else {
+                alert(resp.msg)
+            }
+        })
+    }
+</script>
+</body>
+</html>

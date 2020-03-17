@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+    </script>
+</head>
+<body>
+
+<form onsubmit="return false" action="##">
+    <input name="username" id="username" value="admin">
+    <input name="password" id="password" value="123">
+    <button onclick="login()">登录</button>
+</form>
+<script type="application/javascript">
+    function login() {
+        var username = $('#username').value;
+        var password = $('#password').value;
+        var formData = $('form').serialize();
+
+        $.post("/auth/login",formData, resp => {
+            console.log(resp)
+    })
+
+    }
+</script>
+</body>
+</html>

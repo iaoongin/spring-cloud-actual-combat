@@ -10,6 +10,7 @@ public enum MessageCode {
     AUTH_UNAUTHORIZED("401000", "身份鉴权失败."),
     AUTH_INVALID_CREDENTIALS("401001", "密码错误."),
     AUTH_USER_DOES_NOT_EXIST("401002", "用户不存在."),
+    AUTH_UN_SUPPORT_SITE("401003", "不支持的站点."),
     ;
 
     //Message 编码

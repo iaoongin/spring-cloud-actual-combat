@@ -6,7 +6,14 @@ spring:
       server:
         git:
           uri: https://github.com/iaoongin/spring-cloud-actual-combat #配置文件所在仓库
-#          username: github 登录账号
-#          password: github 登录密码
           default-label: master #配置文件分支
           search-paths: config/scac-config-eureka-peer  #配置文件所在根目录
+---
+spring:
+  profiles:
+    active: prod
+  cloud:
+    config:
+      server:
+        native:
+          searchLocations: D:\web\scac\config\scac-config-eureka-peer

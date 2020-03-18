@@ -35,12 +35,12 @@ public class R<T> {
         return new R(MessageCode.COMMON_SUCCESS, data);
     }
 
-    public static <T> R fail(MessageCode messageCode) {
-        return new R(MessageCode.COMMON_FAILURE);
-    }
-
     public static <T> R just(MessageCode messageCode, T data) {
         return new R(messageCode, data);
+    }
+
+    public static <T> R just(MessageCode messageCode) {
+        return new R(messageCode);
     }
 
     public static <T> R fail() {

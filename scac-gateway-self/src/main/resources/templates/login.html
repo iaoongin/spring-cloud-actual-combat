@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -9,30 +9,38 @@
 <body>
 
 <form onsubmit="return false" action="##">
-    <input name="username" id="username" value="123">
-    <input name="password" id="password" value="123">
+    <input name="username" value="123">
+    <input name="password" value="123">
+    <input name="redirectUrl" id="redirectUrl" type="hidden">
     <button onclick="login()">登录</button>
 </form>
-<script type="application/javascript">
-    (function ($) {
-        $.getUrlParam = function (name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-            var r = window.location.search.substr(1).match(reg);
-            if (r != null) return unescape(r[2]);
-            return null;
-        }
+<script type="application/javascript" th:inline="javascript">
+    const deployUrl = [[${deployUrl}]]
 
-
-    })(jQuery);
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
 
     function login() {
-        var formData = $('form').serialize();
 
-        $.post("/auth/login", formData, resp => {
+        let redirectUrl = getUrlParam('redirectUrl');
+        $('#redirectUrl').val(redirectUrl)
+        let formData = $('form').serialize();
+
+        console.log(formData)
+        if (!redirectUrl) {
+            alert('无重定向域名.')
+            return false
+        }
+
+        $.post(deployUrl + "/auth/login", formData, resp => {
             console.log(resp)
-            console.log($.getUrlParam('redirectUrl'))
+            console.log(redirectUrl)
             if (resp.code == '200') {
-                window.location.href = $.getUrlParam('redirectUrl') + "?token=" + resp.data.token;
+                window.location.href = redirectUrl + "?token=" + resp.data.token;
             } else {
                 alert(resp.msg)
             }

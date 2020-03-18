@@ -1,20 +1,26 @@
 package me.akoala.scac.gateway.self.config;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import me.akoala.scac.common.api.MessageCode;
+import me.akoala.scac.common.api.R;
+import me.akoala.scac.gateway.self.rr.UnAuthResponse;
 import me.akoala.scac.gateway.self.service.TokenProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
-import java.net.URI;
 
 @Component
 public class AuthWebFilter implements WebFilter {
@@ -22,13 +28,13 @@ public class AuthWebFilter implements WebFilter {
     private static final String TOKEN_PREFIX = "Bearer ";
 
     public static final String loginPage = "/auth/login.html";
-    public static final String unAuthApiApi = "/unAuth";
+    public static final String unAuthApi = "/unAuth";
     public static final String loginApi = "/auth/login";
     //security的鉴权排除的url列表
     private static final String[] excludedAuthPages = {
             loginPage,
             loginApi,
-            unAuthApiApi,
+            unAuthApi,
             "/auth/logout",
             "/health",
             "/api/socket/**"
@@ -37,10 +43,8 @@ public class AuthWebFilter implements WebFilter {
     @Resource
     private TokenProvider tokenProvider;
 
-    @Value("${eureka.instance.hostname}")
-    private String hostName;
-    @Value("${server.port}")
-    private String port;
+    @Value("${deployUrl}")
+    private String deployUrl;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
@@ -60,18 +64,25 @@ public class AuthWebFilter implements WebFilter {
                 return chain.filter(exchange);
             }
         }
-        // 重定向到登录API
+
         ServerHttpResponse response = exchange.getResponse();
+        /* // 重定向到登录API
 //        response.setStatusCode()
         response.setStatusCode(HttpStatus.TEMPORARY_REDIRECT);
         response.getHeaders().setLocation(URI.create(unAuthApiApi));
 
-//        request.
-//        response.setStatusCode(HttpStatus.UNAUTHORIZED);
-//        WsResponse<LoginErrorResponse> wsResponse = WsResponse.success(new LoginErrorResponse(String.format("http://%s:%s/auth/login.html", hostName, port)));
-//        DataBuffer dataBuffer = response.bufferFactory().wrap(JSONUtil.toJsonStr(wsResponse).getBytes());
-//        response.writeWith(Flux.just(dataBuffer));
-        return response.setComplete();
+        */
+
+        // 直接输出内容
+        response.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        UnAuthResponse unAuthResponse = new UnAuthResponse(deployUrl + loginPage);
+        R just = R.just(MessageCode.AUTH_UNAUTHORIZED, unAuthResponse);
+        byte[] bytes = JSONUtil.toJsonStr(just).getBytes();
+        response.getHeaders().setContentLength(bytes.length);
+        DataBufferFactory dataBufferFactory = response.bufferFactory();
+        Flux<DataBuffer> dataBufferFlux = Flux.just(dataBufferFactory.wrap(bytes));
+        return response.writeWith(dataBufferFlux);
     }
 
     private boolean checkToken(String authorization) {

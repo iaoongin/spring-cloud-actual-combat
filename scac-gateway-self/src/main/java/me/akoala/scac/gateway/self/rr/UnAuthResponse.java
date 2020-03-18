@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginErrorResponse {
+public class UnAuthResponse {
 
     private String loginUrl;
 

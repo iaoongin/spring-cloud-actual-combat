@@ -15,8 +15,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public R handler(Exception e) {
         if (e instanceof ApiException) {
-            return R.fail(((ApiException) e).getMessageCode());
-        }else if (e instanceof RuntimeException){
+            return R.just(((ApiException) e).getMessageCode());
         }
         return R.fail();
     }
